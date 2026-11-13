@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fff9ec" />
+  <meta name="description" content="Two choices. Zero peace. Questionable decisions. Pick a poison and see where your friends land." />
+  <title>Pick Your Poison — two choices, zero peace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="Pick Your Poison home"><span class="brand-mark">p!</span><span>PICK YOUR<br/>POISON</span></a>
+      <nav class="nav" aria-label="Main navigation">
+        <button class="nav-link active" data-view="play">PLAY</button>
+        <button class="nav-link" data-view="categories">CATEGORIES</button>
+        <button class="nav-link" data-view="profile">YOUR STATS</button>
+      </nav>
+      <div class="top-right"><div class="streak-pill"><span>✳</span> <b id="streak">0</b><small>DAY STREAK</small></div><button class="avatar" id="profileBtn" aria-label="Open profile">👾</button></div>
+    </header>
+    <main id="app"></main>
+    <footer><span>© 2025 PICK YOUR POISON</span><span>MADE FOR THE GROUP CHAT <b>✳</b></span><button id="customBtn">+ MAKE A DILEMMA</button></footer>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
