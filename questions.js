@@ -1,11 +1,11 @@
 /* Question library is intentionally independent from the UI. Community stats are never fabricated. */
-window.POISON_QUESTIONS = (() => {
+window.PICK_A_SIDE_QUESTIONS = (() => {
   const categories = [
     {id:'internet',name:'Internet culture',short:'INTERNET CULTURE',icon:'◎',color:'#7257ff',sub:['Group chats','Social media','Digital privacy','Internet fame','Memes'],franchise:null},
     {id:'relationships',name:'Relationships',short:'RELATIONSHIPS',icon:'♡',color:'#ff8fb3',sub:['Dating','Friendship','Trust','Social life','Romance'],franchise:null},
     {id:'money',name:'Money & lifestyle',short:'MONEY & LIFESTYLE',icon:'＄',color:'#c6ff38',sub:['Sudden wealth','Career','Luxury','Business','Happiness'],franchise:null},
     {id:'pop',name:'Pop culture',short:'POP CULTURE',icon:'✦',color:'#ff702e',sub:['Music','Movies','Celebrity','Fame','Entertainment'],franchise:null},
-    {id:'anime',name:'Anime & manga',short:'ANIME & MANGA',icon:'卍',color:'#68d9ff',sub:['Powers','Rivalries','Alternate endings','Anime worlds','Character choices'],franchise:['Naruto','One Piece','Dragon Ball','Bleach','Attack on Titan','Jujutsu Kaisen','Demon Slayer','My Hero Academia','Hunter x Hunter','Death Note','Solo Leveling','Mob Psycho 100','Fullmetal Alchemist','Spy x Family','Haikyuu!!','Frieren','Chainsaw Man','Sailor Moon','Vinland Saga','Cowboy Bebop']},
+    {id:'anime',name:'Anime & manga',short:'ANIME & MANGA',icon:'卍',color:'#68d9ff',sub:['Powers','Rivalries','Alternate endings','Anime worlds','Character choices'],franchise:['Naruto','One Piece','Dragon Ball','Bleach','Attack on Titan','Jujutsu Kaisen','Demon Slayer','My Hero Academia','Hunter x Hunter','Death Note','Solo Leveling','Mob Psycho 100','Fullmetal Alchemist','Spy x Family','Haikyuu!!','Frieren','Chainsaw Man','Sailor Moon','Vinland Saga','Cowboy Bebop','One Punch Man']},
     {id:'comics',name:'Comics & heroes',short:'COMICS & HEROES',icon:'✹',color:'#ffe36e',sub:['Secret identities','Powers','Villains','Teams','Alternate worlds'],franchise:['Marvel','DC','Image Comics','Invincible','Hellboy','TMNT','The Sandman','Spawn','X-Men','Spider-Verse','Watchmen','The Boys']},
     {id:'life',name:'Family & life',short:'FAMILY & LIFE',icon:'⌂',color:'#ff702e',sub:['Family','Personal values','Regrets','Personality','Life choices'],franchise:null},
     {id:'future',name:'Tech & the future',short:'TECH & FUTURE',icon:'⌘',color:'#68d9ff',sub:['Artificial intelligence','Digital identity','Robots','Future inventions','Automation'],franchise:null},
@@ -25,6 +25,11 @@ window.POISON_QUESTIONS = (() => {
     chaos:[['Have a tiny dragon that hoards your phone chargers','Have a giant hamster that demands a daily meeting'],['Teleport anywhere but arrive facing the wrong direction','Fly anywhere but only at walking speed'],['Make any object squeak when you touch it','Make any room smell like toast when you enter'],['Understand animals but they only gossip about each other','Talk to plants but they have very strong opinions'],['Have a personal theme song played by nearby furniture','Get a dramatic spotlight every time you make a mistake'],['Every time you sneeze, a random balloon appears','Every time you yawn, someone nearby says “same”'],['Have arms as long as a giraffe’s neck','Have legs as short as a corgi’s'],['Fight one hundred ducks every Tuesday','Fight one horse-sized pigeon once a year'],['Turn invisible but your shoes remain visible','Become a pigeon but keep your regular responsibilities'],['Always have the perfect comeback ten minutes later','Always have the perfect outfit for the wrong occasion']]
   };
   const levels=['MILD','SPICY','FERAL'];
+  const franchiseRules={
+    anime:[[/Naruto|jutsu|Hokage/i,'Naruto'],[/One Piece|Straw Hats|Luffy|Zoro/i,'One Piece'],[/Dragon Ball|Goku/i,'Dragon Ball'],[/One Punch Man|Saitama/i,'One Punch Man'],[/Bleach|Bankai|Ichigo/i,'Bleach'],[/Attack on Titan|Survey Corps|Titan/i,'Attack on Titan'],[/Jujutsu Kaisen|Gojo|cursed technique/i,'Jujutsu Kaisen'],[/Demon Slayer|Tanjiro|Nichirin/i,'Demon Slayer'],[/My Hero Academia|Quirk/i,'My Hero Academia'],[/Hunter x Hunter|HxH|Hunter exam/i,'Hunter x Hunter'],[/Death Note/i,'Death Note'],[/Solo Leveling/i,'Solo Leveling'],[/Mob Psycho/i,'Mob Psycho 100'],[/Fullmetal Alchemist|alchemy circle/i,'Fullmetal Alchemist'],[/Spy x Family|Anya|Loid/i,'Spy x Family'],[/Haikyuu/i,'Haikyuu!!'],[/Frieren/i,'Frieren'],[/Chainsaw Man/i,'Chainsaw Man'],[/Sailor Moon/i,'Sailor Moon'],[/Vinland Saga/i,'Vinland Saga'],[/Cowboy Bebop|Spike Spiegel/i,'Cowboy Bebop']],
+    comics:[[/Batman|Batcave|Gotham|Nightwing|Green Lantern|Justice League|DC\b/i,'DC'],[/Spider-Man|Spider-Verse|Avengers|symbiote|Wolverine|X-Men|Guardians of the Galaxy|Fantastic Four|Doctor Strange|Marvel\b/i,'Marvel'],[/Image Comics/i,'Image Comics'],[/Invincible/i,'Invincible'],[/Hellboy/i,'Hellboy'],[/TMNT|Ninja Turtles/i,'TMNT'],[/Sandman/i,'The Sandman'],[/Spawn/i,'Spawn'],[/Watchmen/i,'Watchmen'],[/The Boys/i,'The Boys']]
+  };
+  const findFranchises=(categoryId,a,b)=>{const text=`${a} ${b}`;return (franchiseRules[categoryId]||[]).filter(([pattern])=>pattern.test(text)).map(([,name])=>name)};
   const items=[];
   for (const cat of categories) {
     const bank=pairs[cat.id]; let n=0;
@@ -32,18 +37,21 @@ window.POISON_QUESTIONS = (() => {
       for (let variant=0; variant<5; variant++) {
         const ix=n++;
         const intensity=levels[(ix+variant)%3];
-        const franchise=cat.franchise ? cat.franchise[(ix*7+variant*3)%cat.franchise.length] : null;
+        const franchises=findFranchises(cat.id,a,b);
+        const franchise=franchises[0]||null;
         const prompts=[
           `In a parallel universe, would you rather: ${a.toLowerCase()} or ${b.toLowerCase()}?`,
-          `Pick your poison: ${a.toLowerCase()} — or ${b.toLowerCase()}?`,
+          `Pick a side: ${a.toLowerCase()} — or ${b.toLowerCase()}?`,
           `Your friends are making you choose: ${a.toLowerCase()} or ${b.toLowerCase()}.`,
           `For the rest of the year, would you rather ${a.toLowerCase()} or ${b.toLowerCase()}?`,
           `No loopholes. Choose one: ${a.toLowerCase()} or ${b.toLowerCase()}.`
         ];
         /* Variants receive distinct scenario framing and identifiers; both outcomes remain intact. */
-        items.push({id:`${cat.id}-${String(ix+1).padStart(3,'0')}`,category:cat.id,subcategory:cat.sub[ix%cat.sub.length],question:prompts[variant],a,b,intensity,rating:'13+',tags:[cat.id,cat.sub[ix%cat.sub.length].toLowerCase().replaceAll(' ','-')],franchise,provenance:'Original editorial content; no population statistics attached.'});
+        items.push({id:`${cat.id}-${String(ix+1).padStart(3,'0')}`,category:cat.id,subcategory:cat.sub[ix%cat.sub.length],question:prompts[variant],a,b,intensity,rating:'13+',tags:[cat.id,cat.sub[ix%cat.sub.length].toLowerCase().replaceAll(' ','-'),...franchises.map(x=>x.toLowerCase().replaceAll(' ','-'))],franchise,franchises,provenance:'Original editorial content; no population statistics attached.'});
       }
     }
   }
   return {categories,items};
 })();
+// Keep the legacy global available for existing bookmarks and integrations.
+window.POISON_QUESTIONS = window.PICK_A_SIDE_QUESTIONS;
